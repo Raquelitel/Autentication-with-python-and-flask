@@ -34,6 +34,7 @@ def signup():
     )
     db.session.add(new_user)
     db.session.commit()
+
     return jsonify(new_user.serialize()), 200
 
     
@@ -47,12 +48,12 @@ def login():
     return jsonify({ "token": access_token, "user_id": user.id, "result": "Usuario registrado correctamente"}), 200
 
 
-@app.route("/protected", methods=["GET"])
+@api.route('/private', methods=['GET'])
 @jwt_required()
-def protected():
+def private():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
     if user:
-        return jsonify({"logged_in": True}), 200
+        return jsonify({"resultado": "acceso permitido"}), 200
     else:
-        return jsonify({"logged_in": False}), 400
+        return jsonify({ "resultado": "usuario no autenticado"}), 400
