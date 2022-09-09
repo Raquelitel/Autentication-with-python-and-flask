@@ -1,6 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
+      tokenLS: null,
       message: null,
       demo: [
         {
@@ -64,7 +65,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = await resp.text();
 
           if (resp.status == 404) {
-            console.log(resp.status);
             return false;
           }
           if (resp.status == 200) {
@@ -91,6 +91,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = await resp.json();
           if (resp.status === 200) {
             localStorage.setItem("token", data.token);
+            setStore({ tokenLS: data.token });
             return true;
           } else {
             return false;
@@ -98,6 +99,9 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.log("Error loading message from backend", error);
         }
+      },
+      deleteTokenLS: () => {
+        setStore({ tokenLS: null });
       },
     },
   };

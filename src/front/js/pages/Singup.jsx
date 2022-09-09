@@ -26,10 +26,10 @@ const Signup = () => {
       } else {
         setMensajeError("Usuario ya existe");
       }
+    } else {
+      setMensajeError("Contraseñas incorrectas");
     }
   };
-
-  /*   <Navigate to="./" replace={true} /> */
 
   return (
     <div className="vh-100 bg-fondo color-texto">
