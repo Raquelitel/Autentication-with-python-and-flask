@@ -55,7 +55,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Accept: "application/json",
             },
             body: JSON.stringify({
               email: email,
@@ -63,8 +62,13 @@ const getState = ({ getStore, getActions, setStore }) => {
             }),
           });
           const data = await resp.text();
+
+          if (resp.status == 404) {
+            console.log(resp.status);
+            return false;
+          }
           if (resp.status == 200) {
-            getActions().login(email, password);
+            return true;
           }
           return data;
         } catch (error) {
@@ -86,9 +90,11 @@ const getState = ({ getStore, getActions, setStore }) => {
           });
           const data = await resp.json();
           if (resp.status === 200) {
-            localStorage.setItem("token", data.access_token);
+            localStorage.setItem("token", data.token);
+            return true;
+          } else {
+            return false;
           }
-          return data;
         } catch (error) {
           console.log("Error loading message from backend", error);
         }

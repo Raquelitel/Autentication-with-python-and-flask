@@ -1,7 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Mensaje from "../component/mensaje";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -9,21 +10,39 @@ const Signup = () => {
   const [password1, setPassword1] = useState("");
   const { store, actions } = useContext(Context);
 
-  const handleSubmit = (e) => {
+  const [mensaje, setMensaje] = useState("");
+  const [mensajeError, setMensajeError] = useState("");
+
+  let navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     if (password === password1) {
       e.preventDefault();
-      actions.createUser(email, password);
-      window.location.href = "./private";
-    } else alert("Las contraseñas deben ser iguales");
+      if (await actions.createUser(email, password)) {
+        setMensaje("Usuario creado");
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        setMensajeError("Usuario ya existe");
+      }
+    }
   };
 
+  /*   <Navigate to="./" replace={true} /> */
+
   return (
-    <>
-      <div className="d-flex justify-content-center">
-        <form onSubmit={handleSubmit}>
+    <div className="vh-100 bg-fondo color-texto">
+      <h1 className="text-center pt-4 text-capitalize">Crear nuevo usuario</h1>
+
+      {mensaje && <Mensaje tipo="alerta-correcto">{mensaje}</Mensaje>}
+      {mensajeError && <Mensaje tipo="alerta-error">{mensajeError}</Mensaje>}
+
+      <div className="d-flex justify-content-center align-items-center h-50 d-inline-block">
+        <form onSubmit={handleSubmit} className="col-10 col-md-5">
           <div className="mb-3">
             <label htmlFor="exampleInputEmail1" className="form-label">
-              Email address
+              Email*
             </label>
             <input
               type="email"
@@ -32,13 +51,10 @@ const Signup = () => {
               aria-describedby="emailHelp"
               onChange={(e) => setEmail(e.target.value)}
             />
-            <div id="emailHelp" className="form-text">
-              We'll never share your email with anyone else.
-            </div>
           </div>
           <div className="mb-3">
             <label htmlFor="exampleInputPassword1" className="form-label">
-              Password
+              Contraseña*
             </label>
             <input
               type="password"
@@ -46,8 +62,10 @@ const Signup = () => {
               id="exampleInputPassword1"
               onChange={(e) => setPassword(e.target.value)}
             />
+          </div>
+          <div className="mb-3">
             <label htmlFor="exampleInputPassword2" className="form-label">
-              Retype-Password
+              Repetir Contraseña*
             </label>
             <input
               type="password"
@@ -56,17 +74,19 @@ const Signup = () => {
               onChange={(e) => setPassword1(e.target.value)}
             />
           </div>
-          <div className="d-flex justify-content-between">
+          <div className="d-grid">
             <button type="submit" className="btn btn-primary">
-              SignUp Please!!!
+              Crear usuario
             </button>
-            <Link to="/" className="btn btn-primary">
-              Cancel
+          </div>
+          <div className="text-center mt-1">
+            <Link to="/" className="text-white text-decoration-none">
+              Ya tengo cuenta
             </Link>
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 
