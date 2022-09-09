@@ -25,6 +25,9 @@ const Signup = () => {
         }, 2000);
       } else {
         setMensajeError("Usuario ya existe");
+        setTimeout(() => {
+          setMensajeError("");
+        }, 2000);
       }
     } else {
       setMensajeError("Contraseñas incorrectas");
@@ -35,11 +38,12 @@ const Signup = () => {
     <div className="vh-100 bg-fondo color-texto">
       <h1 className="text-center pt-4 text-capitalize">Crear nuevo usuario</h1>
 
-      {mensaje && <Mensaje tipo="alerta-correcto">{mensaje}</Mensaje>}
-      {mensajeError && <Mensaje tipo="alerta-error">{mensajeError}</Mensaje>}
-
       <div className="d-flex justify-content-center align-items-center h-50 d-inline-block">
         <form onSubmit={handleSubmit} className="col-10 col-md-5">
+          {mensaje && <Mensaje tipo="alerta-correcto">{mensaje}</Mensaje>}
+          {mensajeError && (
+            <Mensaje tipo="alerta-error">{mensajeError}</Mensaje>
+          )}
           <div className="mb-3">
             <label htmlFor="exampleInputEmail1" className="form-label">
               Email*

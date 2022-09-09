@@ -1,32 +1,27 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
+
+
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+
+from flask_jwt_extended import (
+    JWTManager, jwt_required, get_jwt_identity,
+    create_access_token, get_jwt
+)
 
 api = Blueprint('api', __name__)
 
-
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
-
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
-
-    return jsonify(response_body), 200
-
-
-
+""" blacklist = set() """
 
 @api.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json() 
     user = User.query.filter_by(email = data.get("email")).first()
     if user is not None:
-        return "Usuario registrado", 404
+        return "Usuario ya existente", 404
     new_user = User(
         email = data.get("email"),
         password = data.get("password"),
@@ -59,3 +54,12 @@ def private():
         return jsonify({"resultado": "acceso permitido"}), 200
     else:
         return jsonify({ "resultado": "usuario no autenticado"}), 400
+
+
+
+""" @api.route('/logout', methods=['DELETE'])
+@jwt_required
+def logout():
+    jti = get_raw_jwt()['jti']
+    blacklist.add(jti)
+    return jsonify({"msg": "Successfully logged out"}), 200 """

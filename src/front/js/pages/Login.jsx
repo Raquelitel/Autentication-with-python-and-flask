@@ -11,7 +11,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (await actions.login(email, password)) navigate("/private");
+    let loginUser = await actions.login(email, password);
+    if (loginUser) navigate("/private");
     else {
       alert("datos inválidos");
     }
