@@ -1,15 +1,15 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
-
-
+import redis
+from datetime import timedelta
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
-
+from sqlalchemy.sql import text
 from flask_jwt_extended import (
     JWTManager, jwt_required, get_jwt_identity,
-    create_access_token, get_jwt
+    create_access_token,get_jwt
 )
 
 api = Blueprint('api', __name__)

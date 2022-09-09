@@ -29,7 +29,7 @@ const Layout = () => {
             <Route element={<Signup />} path="/signup" />
             <Route
               element={
-                store.tokenLS === null ? <Navigate to="/" /> : <Private />
+                !(store.tokenLS === null) ? <Private /> : <Navigate to="/" />
               }
               path="/private"
             />
